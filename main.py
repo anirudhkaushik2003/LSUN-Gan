@@ -37,6 +37,9 @@ criterion = nn.BCELoss()
 modelG = Generator(IMG_SIZE,img_ch=3)
 modelD = Discriminator(img_channels=3, IMG_SIZE=IMG_SIZE)
 
+modelG = nn.DataParallel(modelG)
+modelD = nn.DataParallel(modelD)
+
 modelG = modelG.to(device)
 modelD = modelD.to(device)
 
@@ -103,8 +106,8 @@ for epoch in range(num_epochs):
             # limit loss to 2 decimal places
             print(f"Epoch: {epoch}, step: {step:03d}, LossD: {lossD.item():.2f}, LossG: {lossG.item():.2f}, D(x): {D_x:.2f}, D(G(z)): {D_G_z1:.2f}/{D_G_z2:.2f}")
     if epoch%save_freq == 0:
-        create_checkpoint(modelG, optimG, epoch, lossG.item(), type="G")
-        create_checkpoint(modelD, optimD, epoch, lossD.item(), type="D")
+        create_checkpoint(modelG, optimG, epoch, lossG.item(), type="G", multiGPU=True)
+        create_checkpoint(modelD, optimD, epoch, lossD.item(), type="D", multiGPU=True)
 
 
 

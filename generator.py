@@ -20,7 +20,7 @@ class Block(nn.Module):
         return x
 
 class Generator(nn.Module):
-    def __init__(self,IMG_SIZE, img_ch=1):
+    def __init__(self,IMG_SIZE, img_ch=3):
         super(Generator, self).__init__()
 
         # project and reshape the input
