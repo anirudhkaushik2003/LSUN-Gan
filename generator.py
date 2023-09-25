@@ -39,11 +39,12 @@ class Generator(nn.Module):
         self.conv2 = Block(self.in_ch//2, self.in_ch//4) # 8x8 -> 16x16, 512 -> 256
         self.conv3 = Block(self.in_ch//4, self.in_ch//8) # 16x16 -> 32x32, 256 -> 128
         self.conv4 = Block(self.in_ch//8, self.in_ch//16) # 32x32 -> 64x64, 128 -> 128
+        self.conv5 = Block(self.in_ch//16, self.in_ch//16) # 64x64 -> 128x128, 64 -> 64
 
 
 
 
-        self.out = nn.ConvTranspose2d(self.in_ch//16, self.img_channels, 4,2,1, bias=False) # 64x64 -> 128x128, 64 -> img_channels
+        self.out = nn.Conv2d(self.in_ch//16, self.img_channels, 3,1,padding='same', bias=False)
         # keep output size same as input
         self.out_act = nn.Tanh()
 
@@ -53,6 +54,7 @@ class Generator(nn.Module):
         x = self.conv2(x)
         x = self.conv3(x)
         x = self.conv4(x)
+        x = self.conv5(x)
         x = self.out(x)
         x = self.out_act(x)
 

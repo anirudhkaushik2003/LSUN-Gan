@@ -13,11 +13,21 @@ import os
 from generator import Generator
 from discriminator import Discriminator
 from utils import weights_init, create_checkpoint, restart_last_checkpoint
+import random
+
 
 import torchvision.utils as vutils
 
 BATCH_SIZE = 64
 IMG_SIZE = 128
+
+# Set random seed for reproducibility
+manualSeed = 999
+#manualSeed = random.randint(1, 10000) # use if you want new results
+print("Random Seed: ", manualSeed)
+random.seed(manualSeed)
+torch.manual_seed(manualSeed)
+torch.use_deterministic_algorithms(True) # Needed for reproducible results
 
 data_transforms = transforms.Compose([
     transforms.Resize((IMG_SIZE, IMG_SIZE)),
@@ -59,8 +69,8 @@ save_freq = 1
 
 # check if checkpoint exists and load it
 if os.path.exists('/ssd_scratch/cvit/anirudhkaushik/checkpoints/lsun_gan_checkpoint_latest.pt'):
-    restart_last_checkpoint(modelG, optimG, type="G")
-    restart_last_checkpoint(modelD, optimD, type="D")
+    restart_last_checkpoint(modelG, optimG, type="G", multiGPU=True)
+    restart_last_checkpoint(modelD, optimD, type="D", multiGPU=True)
 
 for epoch in range(num_epochs):
 
