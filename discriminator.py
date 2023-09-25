@@ -29,14 +29,18 @@ class Block(nn.Module):
         return x
 
 class Discriminator(nn.Module):
-    def __init__(self, img_channels=1):
+    def __init__(self, img_channels=1, IMG_SIZE=128):
         super(Discriminator, self).__init__()
         self.img_channels = img_channels
+        self.img_size = IMG_SIZE
+        self.out_ch = self.img_size*8
 
-        self.conv1 = Block(img_channels, 64) # 32x32x1 -> 16x16x64
-        self.conv2 = Block(64, 128) # 16x16x64 -> 8x8x128
-        self.conv3 = Block(128, 256) # 8x8x128 -> 4x4x256 
-        self.conv4 = Block(256, 512) # 4x4x256 -> 2x2x512
+        self.conv1 = Block(img_channels, self.out_ch//16) # 32x32x1 -> 16x16x64
+        self.conv2 = Block(self.out_ch//16, self.out_ch//8) # 16x16x64 -> 8x8x128
+        self.conv3 = Block(self.out_ch//8, self.out_ch//4) # 8x8x128 -> 4x4x256 
+        self.conv4 = Block(self.out_ch//4, self.out_ch//2) # 4x4x256 -> 2x2x512
+        self.conv5 = Block(self.out_ch//2, self.out_ch) # 4x4x256 -> 2x2x512
+
         
 
         self.out = nn.Conv2d(512, 1, 2 ) # 2x2x512 -> 1x1x1

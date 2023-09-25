@@ -16,7 +16,7 @@ def weights_init(m):
 
 def create_checkpoint(model, optimizer, epoch, loss, multiGPU=False, type="G"):
     if not multiGPU:
-        filename = f'/ssd_scratch/cvit/anirudhkaushik/checkpoints/gan{type}_checkpoint_{epoch}_epoch.pt'
+        filename = f'/ssd_scratch/cvit/anirudhkaushik/checkpoints/lsun_gan{type}_checkpoint_{epoch}_epoch.pt'
 
         checkpoint = {
             'model': model.state_dict(),
@@ -27,7 +27,7 @@ def create_checkpoint(model, optimizer, epoch, loss, multiGPU=False, type="G"):
         torch.save(checkpoint, filename)
 
         # save latest
-        filename = f'/ssd_scratch/cvit/anirudhkaushik/checkpoints/gan{type}_checkpoint_latest.pt'
+        filename = f'/ssd_scratch/cvit/anirudhkaushik/checkpoints/lsun_gan{type}_checkpoint_latest.pt'
         checkpoint = {
             'model': model.state_dict(),
             'optimizer': optimizer.state_dict(),
@@ -37,7 +37,7 @@ def create_checkpoint(model, optimizer, epoch, loss, multiGPU=False, type="G"):
         torch.save(checkpoint, filename)
 
     else:
-        filename = f'/ssd_scratch/cvit/anirudhkaushik/checkpoints/gan{type}_checkpoint_{epoch}_epoch.pt'
+        filename = f'/ssd_scratch/cvit/anirudhkaushik/checkpoints/lsun_gan{type}_checkpoint_{epoch}_epoch.pt'
         checkpoint = {
             'model': model.module.state_dict(),
             'optimizer': optimizer.state_dict(),
@@ -47,7 +47,7 @@ def create_checkpoint(model, optimizer, epoch, loss, multiGPU=False, type="G"):
         torch.save(checkpoint, filename)
 
         # save latest
-        filename = f'/ssd_scratch/cvit/anirudhkaushik/checkpoints/gan{type}_checkpoint_latest.pt'
+        filename = f'/ssd_scratch/cvit/anirudhkaushik/checkpoints/lsun_gan{type}_checkpoint_latest.pt'
         checkpoint = {
             'model': model.module.state_dict(),
             'optimizer': optimizer.state_dict(),
@@ -58,7 +58,7 @@ def create_checkpoint(model, optimizer, epoch, loss, multiGPU=False, type="G"):
 
 
 def restart_last_checkpoint(model, optimizer, multiGPU=False, type="G"):
-    filename = f'/ssd_scratch/cvit/anirudhkaushik/checkpoints/gan{type}_checkpoint_latest.pt'
+    filename = f'/ssd_scratch/cvit/anirudhkaushik/checkpoints/lsun_gan{type}_checkpoint_latest.pt'
     if not multiGPU:
         checkpoint = torch.load(filename)
         model.load_state_dict(checkpoint['model'])

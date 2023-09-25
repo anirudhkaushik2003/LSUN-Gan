@@ -35,12 +35,16 @@ class Generator(nn.Module):
             nn.BatchNorm2d(self.in_ch),
             nn.LeakyReLU(0.2)
         )
-        self.conv1 = Block(self.in_ch, self.in_ch//2)
-        self.conv2 = Block(self.in_ch//2, self.in_ch//4)
-        self.conv3 = Block(self.in_ch//4, self.in_ch//8)
+        self.conv1 = Block(self.in_ch, self.in_ch//2) # 4x4 -> 8x8, 1024 -> 512
+        self.conv2 = Block(self.in_ch//2, self.in_ch//4) # 8x8 -> 16x16, 512 -> 256
+        self.conv3 = Block(self.in_ch//4, self.in_ch//8) # 16x16 -> 32x32, 256 -> 128
+        self.conv4 = Block(self.in_ch//8, self.in_ch//16) # 32x32 -> 64x64, 128 -> 128
 
+
+
+
+        self.out = nn.ConvTranspose2d(self.in_ch//16, self.img_channels, 4,2,1, bias=False) # 64x64 -> 128x128, 64 -> img_channels
         # keep output size same as input
-        self.out = nn.Conv2d(self.in_ch//8, self.img_channels, 3, padding='same' ) # test with kernel size 3
         self.out_act = nn.Tanh()
 
     def forward(self, x):
@@ -48,6 +52,7 @@ class Generator(nn.Module):
         x = self.conv1(x)
         x = self.conv2(x)
         x = self.conv3(x)
+        x = self.conv4(x)
         x = self.out(x)
         x = self.out_act(x)
 
