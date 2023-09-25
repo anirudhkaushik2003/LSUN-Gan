@@ -41,7 +41,7 @@ class Discriminator(nn.Module):
 
         
 
-        self.out = nn.Conv2d(self.out_ch, 1, 4 ) # 2x2x1024 -> 1x1x1
+        self.out = nn.Conv2d(self.out_ch, 1, 4, 1, 0, bias=False ) # 4x4x1024 -> 1x1x1
         self.out_act = nn.Sigmoid()
 
     def forward(self, x):
